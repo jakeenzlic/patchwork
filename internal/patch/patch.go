@@ -50,3 +50,13 @@ func (p *Patch) Validate() error {
 	}
 	return nil
 }
+
+// Summary returns a human-readable summary of the patch, including its version,
+// description, and the number of operations it contains.
+func (p *Patch) Summary() string {
+	desc := p.Description
+	if desc == "" {
+		desc = "(no description)"
+	}
+	return fmt.Sprintf("Patch %s: %s (%d op(s))", p.Version, desc, len(p.Ops))
+}
