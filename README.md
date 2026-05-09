@@ -52,6 +52,12 @@ Roll back the last applied migration:
 patchwork rollback --config config.yaml --migrations ./migrations/
 ```
 
+Dry-run to preview changes without modifying any files:
+
+```bash
+patchwork apply --config config.yaml --migrations ./migrations/ --dry-run
+```
+
 Patchwork tracks applied migrations in a `.patchwork_state` file alongside your config, making it safe to run in CI/CD pipelines and across multiple environments.
 
 ---
