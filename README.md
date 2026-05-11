@@ -52,6 +52,12 @@ Roll back the last applied migration:
 patchwork rollback --config config.yaml --migrations ./migrations/
 ```
 
+Roll back a specific number of migrations:
+
+```bash
+patchwork rollback --config config.yaml --migrations ./migrations/ --steps 3
+```
+
 Dry-run to preview changes without modifying any files:
 
 ```bash
