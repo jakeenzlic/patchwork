@@ -50,8 +50,7 @@ func LoadDir(dir string) ([]*Patch, error) {
 		if entry.IsDir() {
 			continue
 		}
-		ext := strings.ToLower(filepath.Ext(entry.Name()))
-		if ext != ".json" && ext != ".yaml" && ext != ".yml" {
+		if !isSupportedExt(entry.Name()) {
 			continue
 		}
 		p, err := LoadFromFile(filepath.Join(dir, entry.Name()))
@@ -61,4 +60,10 @@ func LoadDir(dir string) ([]*Patch, error) {
 		patches = append(patches, p)
 	}
 	return patches, nil
+}
+
+// isSupportedExt reports whether the filename has a supported patch file extension.
+func isSupportedExt(name string) bool {
+	ext := strings.ToLower(filepath.Ext(name))
+	return ext == ".json" || ext == ".yaml" || ext == ".yml"
 }
