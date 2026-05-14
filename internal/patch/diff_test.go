@@ -80,3 +80,17 @@ func TestDiff_NoChanges(t *testing.T) {
 		t.Errorf("expected no ops, got %d: %+v", len(ops), ops)
 	}
 }
+
+func TestDiff_MultipleChanges(t *testing.T) {
+	src := map[string]interface{}{"a": 1, "b": 2, "c": 3}
+	dst := map[string]interface{}{"a": 1, "b": 99, "d": 4}
+
+	ops, err := Diff(src, dst)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	// expect: replace b, delete c, add d
+	if len(ops) != 3 {
+		t.Fatalf("expected 3 ops, got %d: %+v", len(ops), ops)
+	}
+}
