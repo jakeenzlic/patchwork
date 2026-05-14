@@ -1,6 +1,9 @@
 package patch
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 // PlanEntry describes a single patch operation that would be applied.
 type PlanEntry struct {
@@ -46,17 +49,28 @@ func FormatPlan(entries []PlanEntry) string {
 		return "no operations to apply\n"
 	}
 
-	out := ""
+	var sb strings.Builder
 	for _, e := range entries {
 		status := "pending"
 		if e.Applied {
 			status = "already applied"
 		}
 		if e.Value != nil {
-			out += fmt.Sprintf("  [%d] %-8s %-30s = %v  (%s)\n", e.Index, e.Op, e.Path, e.Value, status)
+			fmt.Fprintf(&sb, "  [%d] %-8s %-30s = %v  (%s)\n", e.Index, e.Op, e.Path, e.Value, status)
 		} else {
-			out += fmt.Sprintf("  [%d] %-8s %-30s  (%s)\n", e.Index, e.Op, e.Path, status)
+			fmt.Fprintf(&sb, "  [%d] %-8s %-30s  (%s)\n", e.Index, e.Op, e.Path, status)
 		}
 	}
-	return out
+	return sb.String()
+}
+
+// PendingEntries returns only the plan entries that have not yet been applied.
+func PendingEntries(entries []PlanEntry) []PlanEntry {
+	pending := make([]PlanEntry, 0, len(entries))
+	for _, e := range entries {
+		if !e.Applied {
+			pending = append(pending, e)
+		}
+	}
+	return pending
 }
