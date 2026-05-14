@@ -11,6 +11,7 @@ import (
 
 // parseConfig deserialises raw bytes into a generic map.
 // The format is inferred from the filename extension of hint.
+// Supported extensions are .json, .yaml, and .yml.
 func parseConfig(raw []byte, hint string) (map[string]any, error) {
 	ext := strings.ToLower(filepath.Ext(hint))
 	var out map[string]any
@@ -33,6 +34,9 @@ func parseConfig(raw []byte, hint string) (map[string]any, error) {
 // normaliseYAML converts map[interface{}]interface{} trees produced by the
 // YAML decoder into map[string]any so they are consistent with JSON output.
 func normaliseYAML(in map[string]any) map[string]any {
+	if in == nil {
+		return nil
+	}
 	out := make(map[string]any, len(in))
 	for k, v := range in {
 		out[k] = normaliseValue(v)
