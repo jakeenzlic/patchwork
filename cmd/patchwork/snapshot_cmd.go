@@ -31,14 +31,23 @@ var snapshotCmd = &cobra.Command{
 		fmt.Printf("  Timestamp: %s\n", snap.Timestamp.Format("2006-01-02 15:04:05 UTC"))
 
 		if verbose, _ := cmd.Flags().GetBool("verbose"); verbose {
-			data, err := json.MarshalIndent(snap.Config, "  ", "  ")
-			if err != nil {
-				return fmt.Errorf("failed to marshal config: %w", err)
+			if err := printSnapshotConfig(snap.Config); err != nil {
+				return err
 			}
-			fmt.Printf("  Config:\n  %s\n", string(data))
 		}
 		return nil
 	},
+}
+
+// printSnapshotConfig marshals the given config and prints it in an indented
+// format suitable for snapshot inspection output.
+func printSnapshotConfig(cfg interface{}) error {
+	data, err := json.MarshalIndent(cfg, "  ", "  ")
+	if err != nil {
+		return fmt.Errorf("failed to marshal config: %w", err)
+	}
+	fmt.Printf("  Config:\n  %s\n", string(data))
+	return nil
 }
 
 var snapshotSaveCmd = &cobra.Command{
