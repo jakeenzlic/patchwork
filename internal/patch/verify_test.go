@@ -40,6 +40,21 @@ func TestChecksum_DiffersOnChange(t *testing.T) {
 	}
 }
 
+func TestChecksum_DiffersOnVersion(t *testing.T) {
+	other := &Patch{
+		Version: "v9.9.9",
+		Changes: []Change{
+			{Op: "replace", Path: "server.port", Value: 9090},
+			{Op: "add", Path: "feature.dark_mode", Value: true},
+		},
+	}
+	sum1, _ := Checksum(baseVerifyPatch)
+	sum2, _ := Checksum(other)
+	if sum1 == sum2 {
+		t.Error("expected different checksums for patches with different versions")
+	}
+}
+
 func TestVerify_AllPathsPresent(t *testing.T) {
 	cfg := map[string]any{
 		"server": map[string]any{"port": 8080},
