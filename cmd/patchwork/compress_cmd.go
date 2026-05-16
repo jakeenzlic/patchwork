@@ -22,6 +22,10 @@ func init() {
 				return fmt.Errorf("load patches: %w", err)
 			}
 
+			if len(patches) == 0 {
+				return fmt.Errorf("bundle: no patches found in %q", dir)
+			}
+
 			if err := patch.Bundle(patches, dest); err != nil {
 				return fmt.Errorf("bundle: %w", err)
 			}
